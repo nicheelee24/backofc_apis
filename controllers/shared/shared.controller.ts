@@ -21,3 +21,20 @@ export const addMember = async (req: any, res: any, next: any) => {
     next(error);
   }
 };
+
+export const getMembers = async (req: any, res: any, next: any) => {
+  try {
+    // checkInputError(req);
+    const query = {
+      ...req.query,
+      page: req.pageNo,
+      limit: req.pageSize,
+      skip: req.skipItem,
+      searchText: req.searchText
+    }
+    const response = await SharedService.getMembers(query);
+    return res.status(response.statusCode).json(response);
+  } catch (error) {
+    next(error);
+  }
+};

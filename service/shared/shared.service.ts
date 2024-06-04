@@ -47,6 +47,42 @@ class SharedServiceClass extends Services {
       throw error
     }
   }
+  async getMembers(query: any) {
+    try {
+      logger.info('Get Member started ');
+      const queryAgg: any = []
+      const queryCount: any = {}
+      if(query.search) {
+        const queryCond = {$or: [
+          { username: new RegExp(query.searchText, 'i') },
+          { agentname: new RegExp(query.searchText, 'i') }
+        ]}
+        queryAgg.push({
+          $match: queryCond
+        })
+        queryCount.$or = queryCond.$or
+      }
+      if(query.userId) {
+        queryAgg.push({
+          $match: { userId: query.userId }
+        })
+        queryCount.userId = query.userId
+      }
+      queryAgg.push(
+        { $skip: query.skip },
+        { $limit: query.limit }
+      )
+      const memberFetched = await MemberModel.aggregate(queryAgg)
+      const countMember = await MemberModel.countDocuments(queryCount)
+      const totalPages = Math.ceil(countMember / query.limit);
+
+      logger.info('Get Member completed');
+      return this.success({ message: "Member Fetched successfully!!", statusCode: HttpStatus.ok, data: { memberDetails: memberFetched, totalPages }, totalCounts: countMember })
+    } catch (error) {
+      logger.error(`Error in Fetch Member`);
+      throw error
+    }
+  }
 
 }
 

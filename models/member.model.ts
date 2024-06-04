@@ -5,11 +5,9 @@ import { tables } from '../config'
 const MemberSchema = new mongoose.Schema({
     agentId: {
         type: String,
-        required: true
     },
     url: {
         type: String,
-        required: true
     },
     platform: {
         type: String,
