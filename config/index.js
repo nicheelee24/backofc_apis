@@ -1,5 +1,5 @@
-export * from './error-message'
-export * from './http-status-code'
+export * from './error-message.js'
+export * from './http-status-code.js'
 // export * from './shared-schema'
 
 export default {

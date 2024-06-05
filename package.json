@@ -2,17 +2,18 @@
   "name": "starter-template",
   "version": "1.0.0",
   "description": "Basic template to start a nodejs ts project",
+  "type": "module",
   "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "build:watch": "tsc --watch",
     "copy-templates": "xcopy public dist\\public /E /I",
-    "start": "cross-env NODE_ENV=development nodemon dist/index.js",
-    "start:node": "cross-env NODE_ENV=development node dist/index.js",
-    "start:prod": "npm run build && cross-env NODE_ENV=production node dist/index.js",
-    "start:dev": "npm run build && cross-env NODE_ENV=development  node dist/index.js",
-    "start:local": "npm run build && cross-env NODE_ENV=development  nodemon dist/index.js"
+    "start": "cross-env NODE_ENV=development nodemon index.js",
+    "start:node": "cross-env NODE_ENV=development node index.js",
+    "start:prod": "npm run build && cross-env NODE_ENV=production node index.js",
+    "start:dev": "npm run build && cross-env NODE_ENV=development  node index.js",
+    "start:local": "npm run build && cross-env NODE_ENV=development  nodemon index.js"
   },
   "author": "",
   "license": "ISC",

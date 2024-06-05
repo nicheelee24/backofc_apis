@@ -1,8 +1,7 @@
-import { checkInputError } from "../../utils";
-import { SharedService } from "../../service/shared";
+import { SharedService } from "../../service/shared/index.js";
 
 
-export const getPing = async (req: any, res: any, next: any) => {
+export const getPing = async (req, res, next) => {
   try {
     // Enable the below function to implement validation checks
     // checkInputError(req);
@@ -12,7 +11,7 @@ export const getPing = async (req: any, res: any, next: any) => {
     next(error);
   }
 };
-export const addMember = async (req: any, res: any, next: any) => {
+export const addMember = async (req, res, next) => {
   try {
     // checkInputError(req);
     const response = await SharedService.addMember(req.body);
@@ -22,7 +21,7 @@ export const addMember = async (req: any, res: any, next: any) => {
   }
 };
 
-export const getMembers = async (req: any, res: any, next: any) => {
+export const getMembers = async (req, res, next) => {
   try {
     // checkInputError(req);
     const query = {

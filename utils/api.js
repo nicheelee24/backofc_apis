@@ -2,9 +2,9 @@ import axios from 'axios'
 
 export class Apis {
 
-    static async post(url: string, data: {}, isInternal = true) {
+    static async post(url, data, isInternal = true) {
         try {
-            const payload: any = {
+            const payload = {
                 url,
                 data,
                 method : 'post',
@@ -17,18 +17,18 @@ export class Apis {
             // }
             let result = await axios(payload);
             return result.data;
-        } catch (error: any) {
-            const errorRes: any = new Error(error.response.data.message);
+        } catch (error) {
+            const errorRes = new Error(error.response.data.message);
             errorRes.statusCode = error.response.data.statusCode;
             errorRes.data = error.response.data.error;
             throw errorRes;
         }
     }
 
-    static async get(url: string, params = '', isInternal = true) {
+    static async get(url, params = '', isInternal = true) {
         try {
             const qs      = params;
-            const payload: any = {
+            const payload = {
                 params : qs,
                 method : 'get',
                 headers: {
@@ -40,8 +40,8 @@ export class Apis {
             // }
             let result = await axios.get(url, payload);
             return result.data;
-        } catch (error: any) {
-            const errorRes: any = new Error(error.response.data.message);
+        } catch (error) {
+            const errorRes = new Error(error.response.data.message);
             errorRes.statusCode = error.response.data.statusCode;
             errorRes.data = error.response.data.error;
             throw errorRes;

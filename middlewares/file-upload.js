@@ -2,16 +2,16 @@ import multer from 'multer';
 
 // SET STORAGE
 const diskStorage = multer.diskStorage({
-    destination: function (req: any, file: any, cb: any) {
+    destination: function (req, file, cb) {
         cb(null, 'Audio');
     },
-    filename: function (req: any, file: any, cb: any) {
+    filename: function (req, file, cb) {
         cb(null, Date.now() + '-' + file.originalname);
     }
 });
 
 /* defined filter */
-const fileFilter = (req: any, file: any, cb: any) => {
+const fileFilter = (req, file, cb) => {
     if (
         file.mimetype === "image/png" ||
         file.mimetype === "image/jpg" ||

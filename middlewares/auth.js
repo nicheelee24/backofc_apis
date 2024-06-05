@@ -1,13 +1,13 @@
 import { NextFunction } from "express";
 import * as jwt from "jsonwebtoken";
-import config from '../config';
+import config from '../config/index.js';
 
-export default function(req: any, res: Response, next: NextFunction)  {
+export default function(req, res, next)  {
   // req.get() help to fetch data from header
-  let decodedToken: any;
+  let decodedToken;
   const authHeader = req.get("Authorization");
   if (!authHeader) {
-    const error: any = new Error("Not authorized");
+    const error = new Error("Not authorized");
     error.statusCode = 401;
     throw error;
   }
@@ -15,13 +15,13 @@ export default function(req: any, res: Response, next: NextFunction)  {
   try {
 
     decodedToken = jwt.verify(token, config.jwtOption.secret);
-  } catch (err: any) {
+  } catch (err) {
     err.statusCode = 401;
     throw err;
   }
 
   if (!decodedToken) {
-    const error: any = new Error("Not Authenticated");
+    const error = new Error("Not Authenticated");
     error.statusCode = 401;
     throw error;
   }
