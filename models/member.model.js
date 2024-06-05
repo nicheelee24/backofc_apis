@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
-import { DateTimeSchema } from '../config/shared-schema'
-import { tables } from '../config'
+import { DateTimeSchema } from '../config/shared-schema.js'
+import { tables } from '../config/index.js'
 
 const MemberSchema = new mongoose.Schema({
     agentId: {

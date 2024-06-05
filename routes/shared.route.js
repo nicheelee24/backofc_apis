@@ -1,6 +1,6 @@
 import { Router } from "express";
-import * as SharedController from "../controllers/shared/shared.controller"
-const router: Router = Router();
+import * as SharedController from "../controllers/shared/shared.controller.js"
+const router = Router();
 
 
 router.get("/ping", SharedController.getPing);

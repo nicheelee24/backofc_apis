@@ -1,11 +1,11 @@
-import Services from "./services"
-import { Apis, getDateTimeForToday, hashPassword, uploadBase64ImageToS3 } from "../../utils"
-import { logger } from '../../utils'
-import HttpStatus from "../../config/http-status"
-import { getRedisValue, setRedisValue } from "../../middlewares/redis-communication"
+import Services from "./services.js"
+import { Apis, getDateTimeForToday, hashPassword, uploadBase64ImageToS3 } from "../../utils/index.js"
+import { logger } from '../../utils/index.js'
+import HttpStatus from "../../config/http-status.js"
+import { getRedisValue, setRedisValue } from "../../middlewares/redis-communication.js"
 // import dynamoDb from "../../utils/database"
-import { getSignedUrlToViewObject } from "../../middlewares/bucket-upload"
-import { MemberModel } from "../../models/member.model"
+import { getSignedUrlToViewObject } from "../../middlewares/bucket-upload.js"
+import { MemberModel } from "../../models/member.model.js"
 class SharedServiceClass extends Services {
   async getPing() {
     try {
@@ -17,7 +17,7 @@ class SharedServiceClass extends Services {
       throw error
     }
   }
-  async addMember(body: any) {
+  async addMember(body) {
     try {
       logger.info('Add Member started for ', body.userId);
       const password = hashPassword(body.password)
@@ -47,11 +47,11 @@ class SharedServiceClass extends Services {
       throw error
     }
   }
-  async getMembers(query: any) {
+  async getMembers(query) {
     try {
       logger.info('Get Member started ');
-      const queryAgg: any = []
-      const queryCount: any = {}
+      const queryAgg = []
+      const queryCount = {}
       if(query.search) {
         const queryCond = {$or: [
           { username: new RegExp(query.searchText, 'i') },

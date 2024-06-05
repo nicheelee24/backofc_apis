@@ -2,7 +2,7 @@ import table from "cli-table"
 
 let tableData = new table();
 
-let enviromentVariables: any = {
+let enviromentVariables = {
   "MONGODB_URL": {
     "message": "Required mongodb url",
     "optional": false

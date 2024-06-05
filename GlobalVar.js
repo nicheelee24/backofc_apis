@@ -1,6 +1,6 @@
-var rabbitMqChannel: any = undefined
-var db: any = undefined
-var redisClient: any = undefined
+var rabbitMqChannel = undefined
+var db = undefined
+var redisClient = undefined
 globalThis.rabbitMqChannel = undefined
 globalThis.db = undefined 
 globalThis.redisClient = undefined

@@ -1,27 +1,25 @@
 import { validationResult, body, query, param, check } from "express-validator";
 import fs from 'fs'
-import { logger } from './logger'
+import { logger } from './logger.js'
 import bcryptJs from "bcryptjs";
 import sgMail from '@sendgrid/mail'
 import ejs from "ejs"
 import { DateTime } from "luxon";
 import path from "path"
 import jwt from "jsonwebtoken"
-import  { Transporter, createTransport }  from "nodemailer"
-import { promisify } from "util"
-import SMTPTransport from "nodemailer/lib/smtp-transport";
-import { uploadPromise } from "../middlewares/bucket-upload";
+import  { createTransport }  from "nodemailer"
+import { uploadPromise } from "../middlewares/bucket-upload.js";
 // if(process.env.SENDGRID_API_KEY !== undefined)
 //     sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 const connection = {
     host: process.env.MAIL_HOST,
     port: Number(process.env.MAIL_PORT),
-    service: process.env.MAIL_MAILER as string,
+    service: process.env.MAIL_MAILER,
     username: process.env.MAIL_USERNAME,
     password: process.env.MAIL_PASSWORD,
 }
-const transporter: Transporter = createTransport({
+const transporter = createTransport({
     service: "service-name",
     host: "host",
     auth: {
@@ -32,56 +30,56 @@ const transporter: Transporter = createTransport({
     port: 587,
     tls: {rejectUnauthorized: false},
   });
-export const bodyNotEmpty = (key: string | string[] | undefined) => {
+export const bodyNotEmpty = (key) => {
     return body(key).notEmpty().withMessage(`${key} field is empty`);
 };
 
-export const queryNotEmpty = (key: string | string[] | undefined) => {
+export const queryNotEmpty = (key) => {
     return query(key).notEmpty().withMessage(`${key} field is empty`);
 };
 
-export const paramNotEmpty = (key: string | string[] | undefined) => {
+export const paramNotEmpty = (key) => {
     return param(key).notEmpty().withMessage(`${key} field is empty`);
 };
-export const ValidateDateFormat = (key: string | string[] | undefined) =>{
+export const ValidateDateFormat = (key) =>{
     return check(key).matches(/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/).withMessage(`${key} format should be (YYYY-MM-DD)`)
 }
-export const ValidateStatus = (key: string | string[] | undefined) =>{
+export const ValidateStatus = (key) =>{
     return check(key).trim().matches(/^[A-Z]+$/).withMessage(`${key} Should be in caps`)
 }
-export const ValidateName = (key: string | string[] | undefined) =>{
+export const ValidateName = (key) =>{
     return check(key).matches(/^([a-zA-Z]+\s)*[a-zA-Z]+$/).withMessage(`${key} can contain only Uppercase, lowercase and single space`)
 }
-export const clearImage= (path: fs.PathLike)=>{
+export const clearImage= (path)=>{
     fs.unlink(path, (err) => {
         if (err) {
             logger.error(err)
         }})
 }
 
-export const generateToken = (tokenData: any, secretKey: any, expiresIn: any) => {
+export const generateToken = (tokenData, secretKey, expiresIn) => {
     return jwt.sign(tokenData, secretKey, { expiresIn: '30d' });
   };
 
-export const hashPassword = (password: string) => {
+export const hashPassword = (password) => {
     if(process.env.SALT_ROUNDS) {
         const salt = bcryptJs.genSaltSync(parseInt(process.env.SALT_ROUNDS));
         return bcryptJs.hashSync(password, salt);
     }
   };
   
-export const comparePassword = (password1: string, password2: string) => {
+export const comparePassword = (password1, password2) => {
     return bcryptJs.compareSync(password1, password2);
   };
-export const checkInputError = function(req: any, images: any = []) {
+export const checkInputError = function(req, images = []) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         if (images.length > 0) {
-            images.forEach((image: { path: any; }) => {
+            images.forEach((image) => {
                 clearImage(image.path);
             });
         }
-        const error: any = new Error("Validation failed, entered data is incorrect");
+        const error = new Error("Validation failed, entered data is incorrect");
         error.statusCode = 422;
         error.data = errors.array();
         throw error;
@@ -89,7 +87,7 @@ export const checkInputError = function(req: any, images: any = []) {
 };
 
 
-export const sendEmail = async function({to, from, subject, templateName, data}: any) {
+export const sendEmail = async function({to, from, subject, templateName, data}) {
     try {
         const html = await ejs.renderFile(path.join(__dirname, `../Templates/${templateName}.ejs`), data, { async: true })
         const msg = {
@@ -115,24 +113,15 @@ export const generateRandom = () => {
     return Math.floor(100000 + Math.random() * 900000)
   }
 
-export const catchError = function (err: { statusCode: number; }, next: (arg0: any) => void) {
+export const catchError = function (err, next) {
     if (!err.statusCode) {
         err.statusCode = 500;
     }
     next(err);
 }
 
-export interface StandardDateTime {
-    day: number;
-    month: number;
-    year: number;
-    hour: number;
-    minute: number;
-    datestamp: string;
-    timestamp: Date;
-    mongoTimestamp: string | null;
-  }
-  export function getDateTimeForToday(timezone = "America/Chicago"): StandardDateTime {
+
+  export function getDateTimeForToday(timezone = "America/Chicago") {
     // NOTE: Change the timezone instead of America/Chicago to anything
     const today = DateTime.local().setZone(timezone);
   
@@ -148,7 +137,7 @@ export interface StandardDateTime {
     }
   }
   
-  export function generateFileName(fileExtension: string) {
+  export function generateFileName(fileExtension) {
     // Get current date
     const currentDate = new Date();
   
@@ -170,9 +159,9 @@ export interface StandardDateTime {
   }
   
   
-export async function uploadBase64ImageToS3(base64String: string, sessionId: string) {
+export async function uploadBase64ImageToS3(base64String, sessionId) {
     try {
-        let base64Image: any = base64String.split(';base64,').pop();
+        let base64Image = base64String.split(';base64,').pop();
         const fileName = generateFileName("jpeg")
         fs.writeFileSync(fileName, base64Image,{encoding: "base64"});
         const uploadResult = await uploadPromise(fileName, `${sessionId}/${fileName}`)

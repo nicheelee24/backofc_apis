@@ -8,19 +8,24 @@ import swaggerJsDoc from "swagger-jsdoc";
 import { config } from "dotenv";
 config({ path: `./.env` });
 // import db from "./Utils/Database"
-import redisDb from "./utils/redis"
+// import redisDb from "./utils/redis"
 import https from 'https'
 import fs from 'fs'
-import Shared from "./routes/shared.route";
-import { logger } from "./utils/logger";
+import Shared from "./routes/shared.route.js";
+import { logger } from "./utils/logger.js";
 // import "./Config/Db-association"
 // import http from "http"
 // import rabbitMq from "./utils/rabbit-mq"
-import envVariables from "./EnvVariables"
+import envVariables from "./EnvVariables.js"
 import mongoose from "mongoose"
-import pagination from "./middlewares/pagination";
-import { connectToMongoDb } from "./utils/database"
-redisDb()
+import pagination from "./middlewares/pagination.js";
+import { connectToMongoDb } from "./utils/database.js"
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+// redisDb()
 let v = envVariables()
 if(!v.success) {
   console.log("Server could not start . Not all environment variable is provided");
@@ -34,7 +39,7 @@ app.use(cors());
 app.use(express.json({limit: '50mb'}));
 app.use(bodyparser.urlencoded({ extended: true, limit: '50mb' }));
 app.use(bodyparser.json());
-const port: any = process.env.PORT || 8080;
+const port = process.env.PORT || 8080;
 
 /* Swagger API initialization Served */
 
@@ -87,7 +92,7 @@ app.use("/api", Shared);
 //   }
 // }, { noAck: true });
 // error handling middleware
-app.use((error: any, req: any, res: any, next: any) => {
+app.use((error, req, res, next) => {
   const status = error.statusCode || 500;
   const message = error.message || "";
   let errorData = [];
@@ -105,7 +110,7 @@ app.use((error: any, req: any, res: any, next: any) => {
 
 
 
-function onError(error: any) {
+function onError(error) {
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case "EACCES":
@@ -127,7 +132,7 @@ if(process.env.MONGODB_URL) {
 if (process.env.NODE_ENV === 'production') {
   // only use in development
   //SSL ENABLED SERVER
-  const ssl: any = {
+  const ssl = {
     key: fs.readFileSync(process.env.SSL_KEY_PATH ?? "", {encoding: 'utf8'}),
     cert: fs.readFileSync(process.env.SSL_CERT_PATH ?? "", {encoding: 'utf8'}),
     ca: fs.readFileSync(process.env.SSL_CA_PATH ?? "", {encoding: 'utf8'}),

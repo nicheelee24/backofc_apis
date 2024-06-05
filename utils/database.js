@@ -1,6 +1,6 @@
-import { logger } from "./logger";
+import { logger } from "./logger.js";
 import mongoose from 'mongoose'
-export const connectToMongoDb = (MONGODB_URL:string) => {
+export const connectToMongoDb = (MONGODB_URL) => {
   let retryCount = 0
   const retryLimit = 5
   const retryInterval = 5000
@@ -31,7 +31,7 @@ export const connectToMongoDb = (MONGODB_URL:string) => {
   connectToDatabaseWithRetry(MONGODB_URL);
 }
 
-const connectToDatabaseWithRetry = function(MONGODB_URL: string) {
+const connectToDatabaseWithRetry = function(MONGODB_URL) {
   if(mongoose) mongoose.connect(MONGODB_URL);
   else logger.error(`Mongoose Object Null!!`)
 };

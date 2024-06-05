@@ -23,7 +23,7 @@ export default async function () {
             logger.error("Error while making connection to redis client:")
         });
     
-        globalThis.redisClient = client;
+        global.redisClient = client;
     }
     
 }
